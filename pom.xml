@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.seeburger.fork</groupId>
     <artifactId>ironjacamar</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <version>1.0.9.SEE1-SNAPSHOT</version>
 
     <name>ironjacamar</name>
