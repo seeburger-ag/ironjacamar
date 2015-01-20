@@ -19,17 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
-<project name="ironjacamar" 
-         default="jars" 
-         basedir="." 
+<project name="ironjacamar"
+         default="jars"
+         basedir="."
          xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <available classname="java.lang.Enum" property="HAVE_JDK_1.5"/>
   <available classname="java.lang.management.LockInfo" property="HAVE_JDK_1.6"/>
   <available classname="java.util.concurrent.ForkJoinPool" property="HAVE_JDK_1.7"/>
 
-  <!-- ================================= 
-       Project              
+  <!-- =================================
+       Project
        ================================= -->
   <property name="name" value="ironjacamar"/>
   <property name="major" value="1"/>
@@ -42,7 +42,7 @@
   </condition>
   <property name="version" value="${major}.${minor}.${patch}.${type}"/>
 
-  <!-- ================================= 
+  <!-- =================================
        Maven repository settings
        ================================= -->
   <condition property="mavensettings" value="/private/ironjacamar/settings.xml">
@@ -60,23 +60,23 @@
   </condition>
   <property name="repositoryid" value="jboss-releases"/>
 
-  <!-- ================================= 
-       Ivy              
+  <!-- =================================
+       Ivy
        ================================= -->
   <property name="ivy.version" value="2.2.0"/>
   <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
   <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
 
-  <!-- ================================= 
-       Repositories              
+  <!-- =================================
+       Repositories
        ================================= -->
   <property name="central.repo" value="http://repo1.maven.org/maven2"/>
   <property name="jboss.repo" value="http://repository.jboss.org/nexus/content/groups/public/"/>
   <property name="snapshots.repo" value="http://repository.jboss.org/nexus/content/repositories/snapshots/"/>
   <property name="fungal.repo" value="http://jesperpedersen.github.com/fungal/maven2"/>
-  
-  <!-- ================================= 
-       Properties              
+
+  <!-- =================================
+       Properties
        ================================= -->
   <property name="lib.dir" value="${basedir}/lib" />
   <property name="build.dir" value="${basedir}/build" />
@@ -102,8 +102,8 @@
   <property name="junit.batchtest.haltonfailure" value="no" />
   <property name="junit.batchtest.fork" value="yes" />
 
-  <!-- ================================= 
-       Versions              
+  <!-- =================================
+       Versions
        ================================= -->
   <property name="version.ant" value="1.8.1"/>
   <property name="version.activation" value="1.1"/>
@@ -156,8 +156,8 @@
   <property name="version.transaction.api" value="1.0.0.Final"/>
   <property name="version.validation-api" value="1.0.0.GA"/>
 
-  <!-- ================================= 
-       Paths              
+  <!-- =================================
+       Paths
        ================================= -->
   <path id="main.lib.path.id">
     <fileset dir="${lib.dir}/common">
@@ -283,50 +283,50 @@
     <fileset dir="${tools.dir}/tattletale/lib"/>
   </path>
 
-  <!-- ================================= 
+  <!-- =================================
        Bootstrap Ivy
        ================================= -->
   <mkdir dir="${ivy.dir}"/>
-  <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}" 
+  <get usetimestamp="true" src="https://repository.apache.org/content/repositories/releases/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
        skipexisting="true"
        dest="${ivy.dir}/${ivy.jar.name}"/>
   <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
 
-  <!-- ================================= 
-       Target: init              
+  <!-- =================================
+       Target: init
        ================================= -->
   <target name="init" depends="init-brew-path">
     <fail message="IronJacamar requires JDK6+" unless="HAVE_JDK_1.6"/>
-  
+
     <ivy:settings file="${basedir}/ivy.settings.xml"/>
 
     <mkdir dir="${build.dir}" />
     <mkdir dir="${target.dir}" />
   </target>
 
-  <!-- ================================= 
-       Target: resolve              
+  <!-- =================================
+       Target: resolve
        ================================= -->
   <target name="resolve-brew" if="brew">
-    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
                   conf="brew"
                   sync="true"/>
   </target>
 
   <target name="resolve" depends="init,resolve-brew" unless="brew">
-    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
                   conf="common,sjc,embedded,arquillian,jetty,hornetq,mail,rhq,test,tools"
                   sync="true"/>
   </target>
-  
-  <!-- ================================= 
-       Target: report              
+
+  <!-- =================================
+       Target: report
        ================================= -->
   <target name="report" depends="resolve">
     <ivy:report todir="${target.dir}"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: jars
        ================================= -->
   <target name="jars-base">
@@ -346,8 +346,8 @@
     <ant dir="rhq" inheritRefs="true" target="jars"/>
     <ant dir="as" inheritRefs="true" target="jars"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: docs
        ================================= -->
   <target name="docs-base">
@@ -367,8 +367,8 @@
     <ant dir="rhq" inheritRefs="true" target="docs"/>
     <ant dir="as" inheritRefs="true" target="docs"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: manual
        ================================= -->
   <target name="manual">
@@ -376,7 +376,7 @@
     <ant dir="${doc.dir}/userguide" inheritRefs="false" inheritAll="false"/>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: prepare test
        ================================= -->
   <target name="prepare-test" depends="jars">
@@ -389,8 +389,8 @@
     <ant dir="adapters" inheritRefs="true" target="prepare-test"/>
     <ant dir="rhq" inheritRefs="true" target="prepare-test"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: test
        ================================= -->
   <target name="test" depends="prepare-test">
@@ -402,30 +402,30 @@
     <ant dir="adapters" inheritRefs="true" target="test"/>
     <ant dir="rhq" inheritRefs="true" target="test"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: one-test
        ================================= -->
   <target name="one-test" depends="jars">
     <condition property="module" else="core">
-      <equals arg1="${module}" arg2="" trim="true"/> 
+      <equals arg1="${module}" arg2="" trim="true"/>
     </condition>
 
     <ant dir="${module}" inheritRefs="true" target="one-test"/>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: module-test
        ================================= -->
   <target name="module-test" depends="jars">
     <condition property="module" else="core">
-      <equals arg1="${module}" arg2="" trim="true"/> 
+      <equals arg1="${module}" arg2="" trim="true"/>
     </condition>
-  	
+
     <ant dir="${module}" inheritRefs="true" target="test"/>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: artifacts
        ================================= -->
   <target name="artifacts-base">
@@ -442,15 +442,15 @@
     <ant dir="codegenerator" inheritRefs="true" target="artifacts"/>
     <ant dir="as" inheritRefs="true" target="artifacts"/>
   </target>
-  
-  <!-- ================================= 
+
+  <!-- =================================
        Target: sjc
        ================================= -->
   <target name="sjc" depends="jars">
     <ant dir="sjc" inheritRefs="true" target="sjc"/>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: release
        ================================= -->
   <target name="release" depends="clean,sjc">
@@ -496,18 +496,18 @@
 
     <zip destfile="${name}-${major}.${minor}.${patch}.${type}.zip"
          basedir="${build.dir}"/>
-    
+
     <tar destfile="${name}-${major}.${minor}.${patch}.${type}.tar"
          basedir="${build.dir}"/>
-    
-    <gzip zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.gz" 
+
+    <gzip zipfile="${name}-${major}.${minor}.${patch}.${type}.tar.gz"
           src="${name}-${major}.${minor}.${patch}.${type}.tar"/>
-    
+
     <delete file="${name}-${major}.${minor}.${patch}.${type}.tar"/>
-    
+
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: checkstyle
        ================================= -->
   <target name="checkstyle" depends="jars">
@@ -529,7 +529,7 @@
     </checkstyle>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: findbugs
        ================================= -->
   <target name="findbugs" depends="jars">
@@ -541,7 +541,7 @@
 
     <findbugs home="${basedir}/tools/findbugs/lib/"
               output="html"
-              outputFile="${reports.dir}/findbugs/findbugs.html" 
+              outputFile="${reports.dir}/findbugs/findbugs.html"
               excludeFilter="${basedir}/tools/findbugs/filter.xml"
               reportLevel="low">
       <auxClasspath>
@@ -601,7 +601,7 @@
 
     <findbugs home="${basedir}/tools/findbugs/lib/"
               output="xml:withMessages"
-              outputFile="${reports.dir}/findbugs/findbugs.xml" 
+              outputFile="${reports.dir}/findbugs/findbugs.xml"
               excludeFilter="${basedir}/tools/findbugs/filter.xml"
               reportLevel="low">
       <auxClasspath>
@@ -660,7 +660,7 @@
     </findbugs>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: cobertura
        ================================= -->
   <target name="cobertura" depends="prepare-test">
@@ -672,7 +672,7 @@
 
     <delete file="${reports.dir}/cobertura/cobertura.ser"/>
     <delete dir="${build.dir}/instrumented"/>
-    
+
     <mkdir dir="${build.dir}/instrumented" />
     <copy todir="${build.dir}/instrumented">
       <fileset dir="${target.dir}">
@@ -705,7 +705,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${reports.dir}/cobertura/cobertura.ser" />
@@ -729,9 +729,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/common/test">
           <include name="**/*TestCase.class"/>
@@ -745,7 +745,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${reports.dir}/cobertura/cobertura.ser" />
@@ -769,9 +769,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/core/test">
           <include name="**/*TestCase.class"/>
@@ -785,7 +785,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="archives.dir" value="${build.dir}/deployers"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
@@ -809,9 +809,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/deployers/test">
           <include name="**/*TestCase.class"/>
@@ -825,7 +825,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${reports.dir}/cobertura/cobertura.ser" />
@@ -849,9 +849,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/embedded/test">
           <include name="**/*TestCase.class"/>
@@ -865,7 +865,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${reports.dir}/cobertura/cobertura.ser" />
@@ -889,9 +889,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/validator/test">
           <include name="**/*TestCase.class"/>
@@ -905,7 +905,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${reports.dir}/cobertura/cobertura.ser" />
@@ -929,9 +929,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/codegenerator/test">
           <include name="**/*TestCase.class"/>
@@ -945,7 +945,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="archives.dir" value="${build.dir}/adapters"/>
@@ -971,9 +971,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/adapters/test">
           <include name="**/*TestCase.class"/>
@@ -987,7 +987,7 @@
            haltonfailure="${junit.haltonfailure}"
            fork="yes"
            timeout="${junit.timeout}">
-      
+
       <jvmarg line="${junit.jvm.options}"/>
       <sysproperty key="test.dir" value="${test.dir}"/>
       <sysproperty key="archives.dir" value="${build.dir}/rhq"/>
@@ -1013,9 +1013,9 @@
         <fileset dir="${lib.dir}/rhq" includes="*.jar" />
       </classpath>
       <classpath refid="cobertura.lib.path.id" />
-      
+
       <formatter type="xml"/>
-      
+
       <batchtest todir="${reports.dir}/cobertura/tests">
         <fileset dir="${build.dir}/rhq/test">
           <include name="**/*TestCase.class"/>
@@ -1023,8 +1023,8 @@
       </batchtest>
     </junit>
 
-    <cobertura-report format="html" 
-                      destdir="${reports.dir}/cobertura/html" 
+    <cobertura-report format="html"
+                      destdir="${reports.dir}/cobertura/html"
                       datafile="${reports.dir}/cobertura/cobertura.ser">
       <fileset dir="api/src/main/java">
         <include name="**/*.java" />
@@ -1061,8 +1061,8 @@
       </fileset>
     </cobertura-report>
 
-    <cobertura-report format="xml" 
-                      destdir="${reports.dir}/cobertura/xml" 
+    <cobertura-report format="xml"
+                      destdir="${reports.dir}/cobertura/xml"
                       datafile="${reports.dir}/cobertura/cobertura.ser">
       <fileset dir="api/src/main/java">
         <include name="**/*.java" />
@@ -1100,7 +1100,7 @@
     </cobertura-report>
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: tattletale
        ================================= -->
   <target name="tattletale" depends="sjc">
@@ -1117,8 +1117,8 @@
             profiles="java6"/>
   </target>
 
-  <!-- ================================= 
-       Target: clean              
+  <!-- =================================
+       Target: clean
        ================================= -->
   <target name="clean">
     <delete>
@@ -1127,7 +1127,7 @@
         <include name="**/*.bak"/>
       </fileset>
     </delete>
-    <delete>
+    <delete failonerror="false">
       <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </delete>
     <delete dir="${build.dir}"/>
@@ -1139,15 +1139,15 @@
     <ant antfile="tools/docant/build.xml" target="clean" inheritrefs="false" inheritAll="false"/>
     <delete dir="${doc.dir}/target"/>
   </target>
-  
-  <!-- ================================= 
-       Target: clean-cache              
+
+  <!-- =================================
+       Target: clean-cache
        ================================= -->
   <target name="clean-cache">
     <ivy:cleancache />
   </target>
 
-  <!-- ================================= 
+  <!-- =================================
        Target: nexus
        ================================= -->
   <macrodef name="deploy-file">
@@ -1187,15 +1187,15 @@ PWD=`pwd`
 VERSION=${version}
 </concat>
 
-    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
                   conf="${name}-common-api,${name}-common-impl,${name}-common-spi,${name}-core-api,${name}-core-impl,${name}-deployers-common,${name}-validator"
                   sync="true"/>
 
     <!-- ironjacamar-spec-api -->
     <delete file="${target.dir}/${name}-spec-api.xml"/>
-    <ivy:makepom artifactName="${name}-spec-api" 
+    <ivy:makepom artifactName="${name}-spec-api"
                  conf="${name}-spec-api"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-spec-api.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1208,9 +1208,9 @@ VERSION=${version}
 
     <!-- ironjacamar-common-api -->
     <delete file="${target.dir}/${name}-common-api.xml"/>
-    <ivy:makepom artifactName="${name}-common-api" 
+    <ivy:makepom artifactName="${name}-common-api"
                  conf="${name}-common-api"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-common-api.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1223,9 +1223,9 @@ VERSION=${version}
 
     <!-- ironjacamar-common-impl -->
     <delete file="${target.dir}/${name}-common-impl.xml"/>
-    <ivy:makepom artifactName="${name}-common-impl" 
+    <ivy:makepom artifactName="${name}-common-impl"
                  conf="${name}-common-impl"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-common-impl.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1241,9 +1241,9 @@ VERSION=${version}
 
     <!-- ironjacamar-common-spi -->
     <delete file="${target.dir}/${name}-common-spi.xml"/>
-    <ivy:makepom artifactName="${name}-common-spi" 
+    <ivy:makepom artifactName="${name}-common-spi"
                  conf="${name}-common-spi"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-common-spi.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1256,9 +1256,9 @@ VERSION=${version}
 
     <!-- ironjacamar-core-api -->
     <delete file="${target.dir}/${name}-core-api.xml"/>
-    <ivy:makepom artifactName="${name}-core-api" 
+    <ivy:makepom artifactName="${name}-core-api"
                  conf="${name}-core-api"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-core-api.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1272,9 +1272,9 @@ VERSION=${version}
 
     <!-- ironjacamar-core-impl -->
     <delete file="${target.dir}/${name}-core-impl.xml"/>
-    <ivy:makepom artifactName="${name}-core-impl" 
+    <ivy:makepom artifactName="${name}-core-impl"
                  conf="${name}-core-impl"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-core-impl.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1290,9 +1290,9 @@ VERSION=${version}
 
     <!-- ironjacamar-deployers-common -->
     <delete file="${target.dir}/${name}-deployers-common.xml"/>
-    <ivy:makepom artifactName="${name}-deployers-common" 
+    <ivy:makepom artifactName="${name}-deployers-common"
                  conf="${name}-deployers-common"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-deployers-common.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1305,9 +1305,9 @@ VERSION=${version}
 
     <!-- ironjacamar-validator -->
     <delete file="${target.dir}/${name}-validator.xml"/>
-    <ivy:makepom artifactName="${name}-validator" 
+    <ivy:makepom artifactName="${name}-validator"
                  conf="${name}-validator"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-validator.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1324,9 +1324,9 @@ VERSION=${version}
 
     <!-- ironjacamar-jdbc -->
     <delete file="${target.dir}/${name}-jdbc.xml"/>
-    <ivy:makepom artifactName="${name}-jdbc" 
+    <ivy:makepom artifactName="${name}-jdbc"
                 conf="${name}-jdbc"
-                ivyfile="${basedir}/ivy.xml" 
+                ivyfile="${basedir}/ivy.xml"
                 pomfile="${target.dir}/${name}-jdbc.xml"
                 headerFile="${tools.dir}/mvn/HEADER"
                 templatefile="${tools.dir}/mvn/pom.template"
@@ -1336,21 +1336,21 @@ VERSION=${version}
 
     <deploy-file file="deploy.sh" artifact="${name}-jdbc" extension="jar"/>
     <install-file file="install.sh" artifact="${name}-jdbc" extension="jar"/>
-  	
+
   </target>
 
   <target name="nexus" depends="clean,artifacts,nexus-base" unless="brew">
     <fail message="IronJacamar doesn't support JDK 7+ artifacts" if="HAVE_JDK_1.7"/>
-  
-    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]" 
+
+    <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact].[ext]"
                   conf="${name}-as,${name}-codegenerator,${name}-common-impl-papaki,${name}-deployers-fungal,${name}-embedded,${name}-embedded-arquillian,${name}-spec-api,${name}-validator-ant,${name}-validator-cli,jdbc-local,jdbc-xa,mail"
                   sync="true"/>
 
     <!-- ironjacamar-as -->
     <delete file="${target.dir}/${name}-as.xml"/>
-    <ivy:makepom artifactName="${name}-as" 
+    <ivy:makepom artifactName="${name}-as"
                  conf="${name}-as"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-as.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1363,9 +1363,9 @@ VERSION=${version}
 
     <!-- ironjacamar-codegenerator -->
     <delete file="${target.dir}/${name}-codegenerator.xml"/>
-    <ivy:makepom artifactName="${name}-codegenerator" 
+    <ivy:makepom artifactName="${name}-codegenerator"
                  conf="${name}-codegenerator"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-codegenerator.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1378,9 +1378,9 @@ VERSION=${version}
 
     <!-- ironjacamar-common-impl-papaki -->
     <delete file="${target.dir}/${name}-common-impl-papaki.xml"/>
-    <ivy:makepom artifactName="${name}-common-impl-papaki" 
+    <ivy:makepom artifactName="${name}-common-impl-papaki"
                  conf="${name}-common-impl-papaki"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-common-impl-papaki.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1394,9 +1394,9 @@ VERSION=${version}
 
     <!-- ironjacamar-depchain -->
     <delete file="${target.dir}/${name}-depchain.xml"/>
-    <ivy:makepom artifactName="${name}-depchain" 
+    <ivy:makepom artifactName="${name}-depchain"
                  conf="${name}-depchain"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-depchain.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1413,9 +1413,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-deployers-fungal -->
     <delete file="${target.dir}/${name}-deployers-fungal.xml"/>
-    <ivy:makepom artifactName="${name}-deployers-fungal" 
+    <ivy:makepom artifactName="${name}-deployers-fungal"
                  conf="${name}-deployers-fungal"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-deployers-fungal.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1433,9 +1433,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-embedded -->
     <delete file="${target.dir}/${name}-embedded.xml"/>
-    <ivy:makepom artifactName="${name}-embedded" 
+    <ivy:makepom artifactName="${name}-embedded"
                  conf="${name}-embedded"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-embedded.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1448,9 +1448,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-embedded-arquillian -->
     <delete file="${target.dir}/${name}-embedded-arquillian.xml"/>
-    <ivy:makepom artifactName="${name}-embedded-arquillian" 
+    <ivy:makepom artifactName="${name}-embedded-arquillian"
                  conf="${name}-embedded-arquillian"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-embedded-arquillian.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1464,9 +1464,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-validator-ant -->
     <delete file="${target.dir}/${name}-validator-ant.xml"/>
-    <ivy:makepom artifactName="${name}-validator-ant" 
+    <ivy:makepom artifactName="${name}-validator-ant"
                  conf="${name}-validator-ant"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-validator-ant.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1480,9 +1480,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-validator-cli -->
     <delete file="${target.dir}/${name}-validator-cli.xml"/>
-    <ivy:makepom artifactName="${name}-validator-cli" 
+    <ivy:makepom artifactName="${name}-validator-cli"
                  conf="${name}-validator-cli"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-validator-cli.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1496,9 +1496,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- ironjacamar-validator-maven -->
     <delete file="${target.dir}/${name}-validator-maven.xml"/>
-    <ivy:makepom artifactName="${name}-validator-maven" 
+    <ivy:makepom artifactName="${name}-validator-maven"
                  conf="${name}-validator-maven"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/${name}-validator-maven.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1512,9 +1512,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- jdbc-local -->
     <delete file="${target.dir}/jdbc-local.xml"/>
-    <ivy:makepom artifactName="jdbc-local" 
+    <ivy:makepom artifactName="jdbc-local"
                  conf="jdbc-local"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/jdbc-local.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1527,9 +1527,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- jdbc-xa -->
     <delete file="${target.dir}/jdbc-xa.xml"/>
-    <ivy:makepom artifactName="jdbc-xa" 
+    <ivy:makepom artifactName="jdbc-xa"
                  conf="jdbc-xa"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/jdbc-xa.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
@@ -1542,9 +1542,9 @@ mvn install:install-file -Dfile=$PWD/${name}-depchain.xml -DpomFile=${name}-depc
 
     <!-- mail -->
     <delete file="${target.dir}/mail.xml"/>
-    <ivy:makepom artifactName="mail" 
+    <ivy:makepom artifactName="mail"
                  conf="mail"
-                 ivyfile="${basedir}/ivy.xml" 
+                 ivyfile="${basedir}/ivy.xml"
                  pomfile="${target.dir}/mail.xml"
                  headerFile="${tools.dir}/mvn/HEADER"
                  templatefile="${tools.dir}/mvn/pom.template"
