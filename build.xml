@@ -35,9 +35,9 @@
   <property name="major" value="1"/>
   <property name="minor" value="0"/>
   <property name="patch" value="9"/>
-  <property name="type" value="Final"/>
+  <property name="type" value="SEE1"/>
 
-  <condition property="version" value="${major}.${minor}.${patch}-SNAPSHOT">
+  <condition property="version" value="${major}.${minor}.${patch}.${type}-SNAPSHOT">
     <isset property="snapshot"/>
   </condition>
   <property name="version" value="${major}.${minor}.${patch}.${type}"/>
