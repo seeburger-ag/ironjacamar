@@ -1517,7 +1517,7 @@ public abstract class WrappedStatement extends JBossWrapper implements Statement
     protected void spyLogExecution(String operation, String callType, long durationNanos)
     {
        final Double duration = Double.valueOf(durationNanos / 1000000d);
-       spyLoggerExecutions.debugf("%s %9.2f [%s] %s% %s",
+       spyLoggerExecutions.debugf("%s %9.2f [%s] %s %s",
                                   jndiName, duration, Constants.SPY_LOGGER_PREFIX_PREPARED_STATEMENT, operation,
                                   spySQL.replace("=?", "="));
     }
@@ -1532,7 +1532,7 @@ public abstract class WrappedStatement extends JBossWrapper implements Statement
     protected void spyLogExecution(String operation, String callType, long durationNanos, String sql, Object params)
     {
        final Double duration = Double.valueOf(durationNanos / 1000000d);
-       spyLoggerExecutions.debugf("%s %9.2f [%s] %s% %s %s",
+       spyLoggerExecutions.debugf("%s %9.2f [%s] %s %s %s",
                                   jndiName, duration, Constants.SPY_LOGGER_PREFIX_PREPARED_STATEMENT, operation,
                                   sql, params);
     }
