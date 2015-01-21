@@ -16,6 +16,10 @@
         <url>https://github.com/seeburger-ag/ironjacamar</url>
     </scm>
 
+    <properties>
+        <repository>snapshot</repository>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -92,6 +96,43 @@
                         <version>4.0</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>deploy-file</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/ironjacamar-jdbc.jar</file>
+                            <repositoryId>${repository}</repositoryId>
+                            <url>https://repo.seeburger.de/archiva/repository/snapshot/</url>
+                            <groupId>${groupId}</groupId>
+                            <artifactId>ironjacamar-jdbc</artifactId>
+                            <version>${version}</version>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
             </plugin>
         </plugins>
     </build>
