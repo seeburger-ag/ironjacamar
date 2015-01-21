@@ -120,8 +120,9 @@
                         </goals>
                         <configuration>
                             <file>${project.build.directory}/ironjacamar-jdbc.jar</file>
-                            <files>${project.build.directory}/ironjacamar-jdbc-sources.jar</files>
-                            <classifiers>sources</classifiers>
+                            <files>${project.build.directory}/ironjacamar-jdbc-sources.jar,${project.build.directory}/ironjacamar-jdbc-javadoc.jar</files>
+                            <types>jar,jar</types>
+                            <classifiers>sources,javadoc</classifiers>
                             <repositoryId>${repository}</repositoryId>
                             <url>https://repo.seeburger.de/archiva/repository/snapshot/</url>
                             <groupId>${project.groupId}</groupId>
