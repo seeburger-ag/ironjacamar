@@ -122,9 +122,9 @@
                             <file>${project.build.directory}/ironjacamar-jdbc.jar</file>
                             <repositoryId>${repository}</repositoryId>
                             <url>https://repo.seeburger.de/archiva/repository/snapshot/</url>
-                            <groupId>${groupId}</groupId>
+                            <groupId>${project.groupId}</groupId>
                             <artifactId>ironjacamar-jdbc</artifactId>
-                            <version>${version}</version>
+                            <version>${project.version}</version>
                         </configuration>
                     </execution>
                 </executions>
