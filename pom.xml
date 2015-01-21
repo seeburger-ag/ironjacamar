@@ -124,7 +124,7 @@
                             <types>jar,jar</types>
                             <classifiers>sources,javadoc</classifiers>
                             <repositoryId>${repository}</repositoryId>
-                            <url>https://repo.seeburger.de/archiva/repository/snapshot/</url>
+                            <url>https://repo.seeburger.de/archiva/repository/${repository}/</url>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>ironjacamar-jdbc</artifactId>
                             <version>${project.version}</version>
