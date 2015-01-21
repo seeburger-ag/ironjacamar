@@ -32,7 +32,7 @@ import java.sql.SQLException;
 
 /**
  * WrappedPreparedStatementJDK7.
- * 
+ *
  * @author <a href="jesper.pedersen@jboss.org">Jesper Pedersen</a>
  */
 public class WrappedPreparedStatementJDK7 extends WrappedPreparedStatement
@@ -45,12 +45,13 @@ public class WrappedPreparedStatementJDK7 extends WrappedPreparedStatement
     * @param s The prepared statement
     * @param spy The spy value
     * @param jndiName The jndi name
+    * @param sql the sql used for the prepared statement
     */
-   public WrappedPreparedStatementJDK7(WrappedConnectionJDK7 lc, PreparedStatement s, boolean spy, String jndiName)
+   public WrappedPreparedStatementJDK7(WrappedConnectionJDK7 lc, PreparedStatement s, boolean spy, String jndiName, String sql)
    {
-      super(lc, s, spy, jndiName);
+      super(lc, s, spy, jndiName, sql);
    }
-   
+
    /**
     * Wrap the result set
     * @param resultSet The result set

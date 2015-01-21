@@ -61,37 +61,37 @@ public class WrappedConnectionJDK7 extends WrappedConnection
    /**
     * Wrap statement
     * @param statement The statement
-    * @param spy The spy value
-    * @param jndiName The jndi name
+ * @param spy The spy value
+ * @param jndiName The jndi name
     * @return The result
     */
-   protected WrappedStatement wrapStatement(Statement statement, boolean spy, String jndiName)
+   protected WrappedStatement wrapStatement(Statement statement, boolean spy, String jndiName, String sql)
    {
-      return new WrappedStatementJDK7(this, statement, spy, jndiName);
+      return new WrappedStatementJDK7(this, statement, spy, jndiName, sql);
    }
 
    /**
     * Wrap prepared statement
     * @param statement The statement
-    * @param spy The spy value
-    * @param jndiName The jndi name
+ * @param spy The spy value
+ * @param jndiName The jndi name
     * @return The result
     */
-   protected WrappedPreparedStatement wrapPreparedStatement(PreparedStatement statement, boolean spy, String jndiName)
+   protected WrappedPreparedStatement wrapPreparedStatement(PreparedStatement statement, boolean spy, String jndiName, String sql)
    {
-      return new WrappedPreparedStatementJDK7(this, statement, spy, jndiName);
+      return new WrappedPreparedStatementJDK7(this, statement, spy, jndiName, sql);
    }
 
    /**
     * Wrap callable statement
     * @param statement The statement
-    * @param spy The spy value
-    * @param jndiName The jndi name
+ * @param spy The spy value
+ * @param jndiName The jndi name
     * @return The result
     */
-   protected WrappedCallableStatement wrapCallableStatement(CallableStatement statement, boolean spy, String jndiName)
+   protected WrappedCallableStatement wrapCallableStatement(CallableStatement statement, boolean spy, String jndiName, String sql)
    {
-      return new WrappedCallableStatementJDK7(this, statement, spy, jndiName);
+      return new WrappedCallableStatementJDK7(this, statement, spy, jndiName, sql);
    }
 
    /**

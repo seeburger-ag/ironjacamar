@@ -45,7 +45,7 @@ import java.util.Map;
 
 /**
  * WrappedCallableStatement
- * 
+ *
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
  * @author <a href="mailto:jesper.pedersen@jboss.org">Jesper Pedersen</a>
@@ -61,11 +61,12 @@ public abstract class WrappedCallableStatement extends WrappedPreparedStatement 
     * @param cs The callable statement
     * @param spy The spy value
     * @param jndiName The jndi name
+    * @param sql the sql used for the prepared statement
     */
    public WrappedCallableStatement(final WrappedConnection lc, final CallableStatement cs,
-                                   boolean spy, String jndiName)
+                                   boolean spy, String jndiName, String sql)
    {
-      super(lc, cs, spy, jndiName);
+      super(lc, cs, spy, jndiName, sql);
       this.cs = cs;
    }
 
@@ -2042,7 +2043,7 @@ public abstract class WrappedCallableStatement extends WrappedPreparedStatement 
             spyLogger.debugf("%s [%s] setNCharacterStream(%s, %s)",
                              jndiName, Constants.SPY_LOGGER_PREFIX_CALLABLE_STATEMENT,
                              parameterIndex, value);
- 
+
          statement.setNCharacterStream(parameterIndex, value);
       }
       catch (Throwable t)

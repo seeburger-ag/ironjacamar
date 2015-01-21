@@ -30,7 +30,7 @@ import java.sql.ResultSet;
 
 /**
  * WrappedPreparedStatementJDK6.
- * 
+ *
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @author <a href="jesper.pedersen@jboss.org">Jesper Pedersen</a>
  * @version $Revision: 85945 $
@@ -45,13 +45,14 @@ public class WrappedPreparedStatementJDK6 extends WrappedPreparedStatement
     * @param s The prepared statement
     * @param spy The spy value
     * @param jndiName The jndi name
+    * @param sql the sql used for the prepared statement
     */
    public WrappedPreparedStatementJDK6(WrappedConnectionJDK6 lc, PreparedStatement s,
-                                       boolean spy, String jndiName)
+                                       boolean spy, String jndiName, String sql)
    {
-      super(lc, s, spy, jndiName);
+      super(lc, s, spy, jndiName, sql);
    }
-   
+
    /**
     * Wrap the result set
     * @param resultSet The result set

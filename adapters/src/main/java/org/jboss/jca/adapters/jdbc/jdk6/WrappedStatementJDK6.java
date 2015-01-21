@@ -48,7 +48,7 @@ public class WrappedStatementJDK6 extends WrappedStatement
     */
    public WrappedStatementJDK6(WrappedConnectionJDK6 lc, Statement s, boolean spy, String jndiName)
    {
-      super(lc, s, spy, jndiName);
+      super(lc, s, spy, jndiName, sql);
    }
 
    /**

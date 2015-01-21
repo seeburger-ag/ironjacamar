@@ -32,7 +32,7 @@ import java.sql.Statement;
 
 /**
  * WrappedStatementJDK7.
- * 
+ *
  * @author <a href="jesper.pedersen@jboss.org">Jesper Pedersen</a>
  */
 public class WrappedStatementJDK7 extends WrappedStatement
@@ -45,10 +45,11 @@ public class WrappedStatementJDK7 extends WrappedStatement
     * @param s The statement
     * @param spy The spy value
     * @param jndiName The jndi name
+    * @param sql the sql used for the prepared statement
     */
-   public WrappedStatementJDK7(WrappedConnectionJDK7 lc, Statement s, boolean spy, String jndiName)
+   public WrappedStatementJDK7(WrappedConnectionJDK7 lc, Statement s, boolean spy, String jndiName, String sql)
    {
-      super(lc, s, spy, jndiName);
+      super(lc, s, spy, jndiName, sql);
    }
 
    /**

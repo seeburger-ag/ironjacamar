@@ -32,6 +32,9 @@ public class Constants
    /** The spy logger category */
    public static final String SPY_LOGGER_CATEGORY = "jboss.jdbc.spy";
 
+   /** The spy logger category only used for executions */
+   public static final String SPY_LOGGER_EXECUTIONS_CATEGORY = "jboss.jdbc.spy.executions";
+
    /** The spy logger prefix for a connection */
    public static final String SPY_LOGGER_PREFIX_CONNECTION = "Connection";
 
