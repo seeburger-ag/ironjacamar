@@ -701,7 +701,7 @@ public abstract class WrappedPreparedStatement extends WrappedStatement implemen
                spyLogger.debugf("%s [%s] setString(%s, %s)",
                                 jndiName, Constants.SPY_LOGGER_PREFIX_PREPARED_STATEMENT,
                                 parameterIndex, value);
-               setParameterSpy(parameterIndex, value);
+               setParameterSpy(parameterIndex, '\'' + value + '\''); // Including ticks (')
             }
 
             ps.setString(parameterIndex, value);
@@ -1869,7 +1869,7 @@ public abstract class WrappedPreparedStatement extends WrappedStatement implemen
                spyLogger.debugf("%s [%s] setNString(%s, %s)",
                                 jndiName, Constants.SPY_LOGGER_PREFIX_PREPARED_STATEMENT,
                                 parameterIndex, value);
-               setParameterSpy(parameterIndex, value);
+               setParameterSpy(parameterIndex, '\'' + value + '\''); // Including ticks (')
             }
 
             statement.setNString(parameterIndex, value);
