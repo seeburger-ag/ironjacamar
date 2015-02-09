@@ -6,7 +6,7 @@
     <groupId>com.seeburger.fork</groupId>
     <artifactId>ironjacamar</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.9.SEE5</version>
+    <version>1.0.9.SEE6-SNAPSHOT</version>
 
     <name>ironjacamar</name>
 
@@ -14,7 +14,7 @@
         <connection>scm:git:git@github.com:seeburger-ag/ironjacamar.git</connection>
         <developerConnection>scm:git:git@github.com:seeburger-ag/ironjacamar.git</developerConnection>
         <url>https://github.com/seeburger-ag/ironjacamar</url>
-      <tag>ironjacamar-1.0.9.SEE5</tag>
+      <tag>ironjacamar-1.0.9.SEE1</tag>
   </scm>
 
     <properties>
