@@ -115,7 +115,7 @@
                     </execution>
                     <!-- deploy ironjacamar-jdbc -->
                     <execution>
-                        <id>deploy-file</id>
+                        <id>deploy-ironjacamar-jdbc</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>deploy-file</goal>
@@ -134,7 +134,7 @@
                     </execution>
                     <!-- deploy ironjacamar-core-impl -->
                     <execution>
-                        <id>deploy-file</id>
+                        <id>deploy-ironjacamar-core-impl</id>
                         <phase>deploy</phase>
                         <goals>
                             <goal>deploy-file</goal>
