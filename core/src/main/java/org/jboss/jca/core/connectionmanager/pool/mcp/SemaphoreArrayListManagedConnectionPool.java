@@ -68,13 +68,13 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
 
    /** Whether debug is enabled */
    private boolean debug;
-   
+
    /** Whether trace is enabled */
    private boolean trace;
-   
+
    /** The bundle */
    private static CoreBundle bundle = Messages.getBundle(CoreBundle.class);
-   
+
    /** The managed connection factory */
    private ManagedConnectionFactory mcf;
 
@@ -93,7 +93,7 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
    /** The pool */
    private Pool pool;
 
-   /** 
+   /**
     * Copy of the maximum size from the pooling parameters.
     * Dynamic changes to this value are not compatible with
     * the semaphore which cannot change be dynamically changed.
@@ -209,12 +209,12 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
          //Register removal support
          IdleRemover.getInstance().registerPool(this, poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60);
       }
-      
+
       if (poolConfiguration.isBackgroundValidation() && poolConfiguration.getBackgroundValidationMillis() > 0)
       {
-         log.debug("Registering for background validation at interval " + 
+         log.debug("Registering for background validation at interval " +
                    poolConfiguration.getBackgroundValidationMillis());
-         
+
          //Register validation
          ConnectionValidator.getInstance().registerPool(this, poolConfiguration.getBackgroundValidationMillis());
       }
@@ -322,7 +322,7 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
                      cl = null;
                   }
 
-                  // We made it here, something went wrong and we should validate 
+                  // We made it here, something went wrong and we should validate
                   // if we should continue attempting to acquire a connection
                   if (poolConfiguration.isUseFastFail())
                   {
@@ -331,10 +331,10 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
                                "acquire connection from pool and a new connection will be created immeadiately");
                      break;
                   }
-               
+
                }
             }
-            while (cls.size() > 0);
+            while (!cls.isEmpty());
 
             // OK, we couldnt find a working connection from the pool.  Make a new one.
             try
@@ -539,7 +539,7 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
          }
 
          // Destroy connections in the pool
-         while (cls.size() > 0)
+         while (!cls.isEmpty())
          {
             ConnectionListener cl = cls.remove(0);
 
@@ -579,18 +579,19 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
    public void removeIdleConnections()
    {
       ArrayList<ConnectionListener> destroy = null;
-      long timeout = System.currentTimeMillis() - (poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60);
+      final long idleTimeoutMs = poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60;
 
       while (true)
       {
          synchronized (cls)
          {
             // Nothing left to destroy
-            if (cls.size() == 0)
+            if (cls.isEmpty())
                break;
 
             // Check the first in the list
             ConnectionListener cl = cls.get(0);
+            long timeout = System.currentTimeMillis() - idleTimeoutMs;
             if (cl.isTimedOut(timeout) && shouldRemove())
             {
                statistics.deltaTimedOut();
@@ -810,9 +811,9 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
     * @return True if connections should be removed; otherwise false
     */
    private boolean shouldRemove()
-   {      
+   {
       boolean remove = true;
-      
+
       if (poolConfiguration.isStrictMin())
       {
          // Add 1 to min-pool-size since it is strict
@@ -821,10 +822,10 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
          if (trace)
             log.trace("StrictMin is active. Current connection will be removed is " + remove);
       }
-      
+
       return remove;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -847,7 +848,7 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
 
                synchronized (cls)
                {
-                  if (cls.size() == 0)
+                  if (cls.isEmpty())
                   {
                      break;
                   }
@@ -869,7 +870,7 @@ public class SemaphoreArrayListManagedConnectionPool implements ManagedConnectio
                      ValidatingManagedConnectionFactory vcf = (ValidatingManagedConnectionFactory) mcf;
                      candidateSet = vcf.getInvalidConnections(candidateSet);
 
-                     if (candidateSet != null && candidateSet.size() > 0)
+                     if (candidateSet != null && !candidateSet.isEmpty())
                      {
                         if (cl.getState() != ConnectionState.DESTROY)
                         {

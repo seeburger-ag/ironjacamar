@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Idle remover
- * 
+ *
  * @author <a href="mailto:gurkanerdogdu@yahoo.com">Gurkan Erdogdu</a>
  * @author <a href="mailto:jesper.pedersen@jboss.org">Jesper Pedersen</a>
  */
@@ -46,20 +46,20 @@ public class IdleRemover
 {
    /** Logger instance */
    private static CoreLogger logger = Logger.getMessageLogger(CoreLogger.class, IdleRemover.class.getName());
-   
+
    /** Thread name */
    private static final String THREAD_NAME = "IdleRemover";
-   
+
    /** Singleton instance */
    private static IdleRemover instance = new IdleRemover();
-   
+
    /** Registered pool instances */
-   private CopyOnWriteArrayList<IdleConnectionRemovalSupport> registeredPools = 
+   private CopyOnWriteArrayList<IdleConnectionRemovalSupport> registeredPools =
       new CopyOnWriteArrayList<IdleConnectionRemovalSupport>();
-   
+
    /** Executor service */
    private ExecutorService executorService;
-   
+
    /** Is the executor external */
    private boolean isExternal;
 
@@ -68,16 +68,16 @@ public class IdleRemover
 
    /** The next scan */
    private long next;
-   
+
    /** Shutdown */
    private AtomicBoolean shutdown;
 
    /** Lock */
    private Lock lock;
-   
+
    /** Condition */
    private Condition condition;
-   
+
    /**
     * Private constructor.
     */
@@ -100,7 +100,7 @@ public class IdleRemover
    {
       return instance;
    }
-   
+
    /**
     * Set the executor service
     * @param v The value
@@ -153,7 +153,7 @@ public class IdleRemover
 
       instance.registeredPools.clear();
    }
-   
+
    /**
     * Register pool for connection validation.
     * @param mcp managed connection pool
@@ -165,7 +165,7 @@ public class IdleRemover
 
       instance.internalRegisterPool(mcp, interval);
    }
-   
+
    /**
     * Unregister pool instance for connection validation.
     * @param mcp pool instance
@@ -182,46 +182,46 @@ public class IdleRemover
       try
       {
          this.lock.lock();
-         
+
          this.registeredPools.addIfAbsent(mcp);
-         
-         if (interval > 1 && interval / 2 < this.interval) 
+
+         if (interval > 1 && interval / 2 < this.interval)
          {
             this.interval = interval / 2;
             long maybeNext = System.currentTimeMillis() + this.interval;
-            if (next > maybeNext && maybeNext > 0) 
+            if (next > maybeNext && maybeNext > 0)
             {
                next = maybeNext;
                if (logger.isDebugEnabled())
                {
                   logger.debug("About to notify thread: old next: " + next + ", new next: " + maybeNext);
-               }               
-               
+               }
+
                this.condition.signal();
             }
-         }         
-      } 
+         }
+      }
       finally
       {
          this.lock.unlock();
       }
    }
-   
+
    private void internalUnregisterPool(IdleConnectionRemovalSupport mcp)
    {
       this.registeredPools.remove(mcp);
-      
-      if (this.registeredPools.size() == 0) 
+
+      if (this.registeredPools.size() == 0)
       {
          if (logger.isDebugEnabled())
          {
-            logger.debug("Setting interval to Long.MAX_VALUE");  
+            logger.debug("Setting interval to Long.MAX_VALUE");
          }
-         
+
          interval = Long.MAX_VALUE;
       }
    }
-         
+
    /**
     * Thread factory.
     */
@@ -234,11 +234,11 @@ public class IdleRemover
       {
          Thread thread = new Thread(r, IdleRemover.THREAD_NAME);
          thread.setDaemon(true);
-         
+
          return thread;
-      }      
+      }
    }
-   
+
    /**
     * IdleRemoverRunner
     */
@@ -251,13 +251,17 @@ public class IdleRemover
       {
          final ClassLoader oldTccl = SecurityActions.getThreadContextClassLoader();
          SecurityActions.setThreadContextClassLoader(IdleRemover.class.getClassLoader());
-         
+
          try
          {
             lock.lock();
-            
+
             while (!shutdown.get())
             {
+                final int registeredPoolsSize = registeredPools.size();
+
+                Thread.currentThread().setName(IdleRemover.THREAD_NAME + " - Registered Pools: " + registeredPoolsSize + " - Interval: " + (instance.interval == Long.MAX_VALUE ? "infinite" : instance.interval + "ms"));
+
                boolean result = instance.condition.await(instance.interval, TimeUnit.MILLISECONDS);
 
                if (logger.isTraceEnabled())
@@ -267,21 +271,21 @@ public class IdleRemover
 
                if (logger.isDebugEnabled())
                {
-                  logger.debug("Notifying pools, interval: " + interval);  
+                  logger.debug("Notifying pools, interval: " + interval);
                }
-     
+
                for (IdleConnectionRemovalSupport mcp : registeredPools)
                {
                   mcp.removeIdleConnections();
                }
 
                next = System.currentTimeMillis() + interval;
-               
+
                if (next < 0)
                {
-                  next = Long.MAX_VALUE;  
+                  next = Long.MAX_VALUE;
                }
-            }            
+            }
          }
          catch (InterruptedException e)
          {
@@ -295,10 +299,10 @@ public class IdleRemover
          catch (Exception e)
          {
             logger.connectionValidatorIgnoredUnexpectedError(e);
-         }         
+         }
          finally
          {
-            lock.unlock();  
+            lock.unlock();
             SecurityActions.setThreadContextClassLoader(oldTccl);
          }
       }

@@ -64,13 +64,13 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
 
    /** Whether debug is enabled */
    private boolean debug;
-   
+
    /** Whether trace is enabled */
    private boolean trace;
-   
+
    /** The bundle */
    private static CoreBundle bundle = Messages.getBundle(CoreBundle.class);
-   
+
    /** The managed connection factory */
    private ManagedConnectionFactory mcf;
 
@@ -138,7 +138,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
       this.cls = new ArrayBlockingQueue<ConnectionListener>(pc.getMaxSize(), true);
       this.checkedOut = new ConcurrentSkipListSet<ConnectionListener>();
       this.statistics = new ManagedConnectionPoolStatisticsImpl(pc.getMaxSize());
-  
+
       // Schedule managed connection pool for prefill
       if (pc.isPrefill() && p instanceof PrefillPool && pc.getMinSize() > 0)
       {
@@ -163,7 +163,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
     */
    public synchronized boolean isEmpty()
    {
-      return cls.size() == 0 && checkedOut.size() == 0;
+      return cls.isEmpty() && checkedOut.isEmpty();
    }
 
    /**
@@ -176,12 +176,12 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
          //Register removal support
          IdleRemover.getInstance().registerPool(this, poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60);
       }
-      
+
       if (poolConfiguration.isBackgroundValidation() && poolConfiguration.getBackgroundValidationMillis() > 0)
       {
-         log.debug("Registering for background validation at interval " + 
+         log.debug("Registering for background validation at interval " +
                    poolConfiguration.getBackgroundValidationMillis());
-         
+
          //Register validation
          ConnectionValidator.getInstance().registerPool(this, poolConfiguration.getBackgroundValidationMillis());
       }
@@ -220,7 +220,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
             throw new RetryableUnavailableException(
                bundle.thePoolHasBeenShutdown(pool.getName(),
                                              Integer.toHexString(System.identityHashCode(this))));
-         
+
          cl = cls.peek();
          if (cl != null)
          {
@@ -246,7 +246,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
 
                if (trace)
                   log.trace("supplying new ManagedConnection: " + cl);
-               
+
                verifyConnectionListener = false;
             }
             catch (Throwable t)
@@ -287,15 +287,15 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
                try
                {
                   cl = createConnectionEventListener(subject, cri);
-               
+
                   if (poolConfiguration.isPrefill() &&
                       pool instanceof PrefillPool &&
                       poolConfiguration.getMinSize() > 0)
                      PoolFiller.fillPool(this);
-               
+
                   if (trace)
                      log.trace("supplying new ManagedConnection: " + cl);
-               
+
                   verifyConnectionListener = false;
                }
                catch (Throwable t)
@@ -313,7 +313,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
 
       // Update in used statistics
       statistics.setInUsedCount(checkedOut.size());
-      
+
       if (!verifyConnectionListener)
       {
          // Return connection listener
@@ -341,17 +341,17 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
             // distinguish these cases, but for now we always
             // destroy the connection.
             log.destroyingConnectionNotSuccessfullyMatched(cl, mcf);
-            
+
             checkedOut.remove(cl);
             statistics.setInUsedCount(checkedOut.size());
-            
+
             doDestroy(cl);
             cl = null;
          }
          catch (Throwable t)
          {
             log.throwableWhileTryingMatchManagedConnection(cl, t);
-         
+
             checkedOut.remove(cl);
             statistics.setInUsedCount(checkedOut.size());
 
@@ -520,7 +520,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
          }
 
          // We destroyed something, check the minimum.
-         if (!shutdown.get() && 
+         if (!shutdown.get() &&
              poolConfiguration.getMinSize() > 0 &&
              poolConfiguration.isPrefill() &&
              pool instanceof PrefillPool)
@@ -536,13 +536,14 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
    public void removeIdleConnections()
    {
       ArrayList<ConnectionListener> destroy = null;
-      long timeout = System.currentTimeMillis() - (poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60);
-      
+      final long idleTimeoutMs = poolConfiguration.getIdleTimeoutMinutes() * 1000L * 60;
+
       boolean cont = true;
       while (cont)
       {
          // Check the first in the list
          ConnectionListener cl = cls.peek();
+         long timeout = System.currentTimeMillis() - idleTimeoutMs;
          if (cl != null && cl.isTimedOut(timeout) && shouldRemove())
          {
             statistics.deltaTimedOut();
@@ -565,7 +566,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
          }
          else
          {
-            // They were inserted chronologically, so if this one 
+            // They were inserted chronologically, so if this one
             // isn't timed out, following ones won't be either.
             cont = false;
          }
@@ -612,7 +613,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
          }
       }
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -653,7 +654,7 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
          {
             cl = createConnectionEventListener(defaultSubject, defaultCri);
             statistics.setInUsedCount(checkedOut.size() + 1);
-               
+
             if ((checkedOut.size() + cls.size()) < poolConfiguration.getMinSize())
             {
                if (trace)
@@ -758,22 +759,22 @@ public class ArrayBlockingQueueManagedConnectionPool implements ManagedConnectio
 
       mc.removeConnectionEventListener(cl);
    }
-   
+
    private boolean shouldRemove()
-   {      
+   {
       boolean remove = true;
-      
+
       if (poolConfiguration.isStrictMin())
       {
          remove = cls.size() > poolConfiguration.getMinSize();
-         
+
          if (trace)
             log.trace("StrictMin is active. Current connection will be removed is " + remove);
       }
-      
+
       return remove;
    }
-   
+
    /**
     * {@inheritDoc}
     */
